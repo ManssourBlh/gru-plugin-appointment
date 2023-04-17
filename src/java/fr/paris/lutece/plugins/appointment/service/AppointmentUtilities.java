@@ -58,6 +58,7 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 
+import fr.paris.lutece.plugins.appointment.service.lock.SerializableScheduledFuture;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -693,7 +694,8 @@ public final class AppointmentUtilities
                 appointmentDTO.setNbMaxPotentialBookedSeats( nNewNbMaxPotentialBookedSeats );
                 SlotSafeService.decrementPotentialRemainingPlaces( nbPotentialPlacesTaken, slot.getIdSlot( ) );
 
-                request.getSession( ).setAttribute( SESSION_TASK_TIMER_SLOT + slot.getIdSlot( ), scheduledFuture );
+                SerializableScheduledFuture<Slot> serializableFuture = new SerializableScheduledFuture<>( scheduledFuture );
+                request.getSession( ).setAttribute( SESSION_TASK_TIMER_SLOT + slot.getIdSlot( ), serializableFuture);
                 return scheduledFuture;
             }
             appointmentDTO.setNbMaxPotentialBookedSeats( 0 );
